@@ -20,9 +20,19 @@ class DbConnection:
     #     dbConn.mycursor.execute(self.sql, self.val)
     #     dbConn.db.commit()
 
-    def registerUser(self, fName, lName, emailAddress, phoneNo):
-        self.sql = "INSERT INTO requestedUser(fName,lName,email,phoneNo) VALUES (%s,%s,%s,%s)"
-        self.value = (fName, lName, emailAddress, phoneNo)
+    def registerUser(self, fName, lName, emailAddress, phoneNo, password):
+        import hashlib
+        self.sql = "INSERT INTO requestedUser(fName,lName,email,phoneNo,password) VALUES (%s,%s,%s,%s,%s)"
+        self.hashedPassword = (hashlib.md5(password.encode()).hexdigest())
+        self.value = (fName, lName, emailAddress, phoneNo, self.hashedPassword)
         dbConn = DbConnection()
         dbConn.mycursor.execute(self.sql, self.value)
         dbConn.db.commit()
+
+    def userLogin(self, email):
+        self.sql = "SELECT email,password from requestedUser where email = %s"
+        self.value = (email,)
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql, self.value)
+        self.result = dbConn.mycursor.fetchall()
+        return self.result

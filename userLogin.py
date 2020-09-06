@@ -27,16 +27,36 @@ class Userregister:
         return self.generatedPassword
 
     def sendUserDetails(self):
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
         self.senderEmail = "gsaurav2000@gmail.com"
         self.senderEmailPassword = "ttrsfkhuayyhzjfn"
-        self.message = "Hey Welcome To Our Shop Please Use This User credentials to Start Your Journey in Shoopy. \n " + \
-            "UserName:" + self.mailAddress + "\n" + "Password:" + self.generatedPassword
+        self.subject = "Shoppy | Login Details"
+        self.msg = MIMEMultipart()
+        self.msg["From"] = self.senderEmail
+        self.msg["To"] = self.mailAddress
+        self.msg["Subject"] = self.subject
+        self.message = MIMEText("Hey Welcome To Our Shop Please Use This User credentials to Start Your Journey in Shoopy. \n " +
+                                "UserName: " + self.mailAddress + "\n" + "Password: " + self.generatedPassword)
+
+        self.msg.attach(self.message)
+
         try:
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
             server.login(self.senderEmail, self.senderEmailPassword)
-            server.sendmail(self.senderEmail, self.mailAddress, self.message)
+            server.sendmail(self.senderEmail,
+                            self.mailAddress, self.msg.as_string())
             server.quit()
 
         except:
             print("SomeThing Went Wrong")
+
+
+class UserLogin:
+    def __init__(self):
+        self.userName = input("Enter Email Address")
+        self.Password = input("Enter Password")
+
+    def login(self):
+        pass
