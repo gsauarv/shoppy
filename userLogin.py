@@ -3,10 +3,11 @@ import smtplib
 
 class Userregister:
     def __init__(self):
-        self.firstName = str(input("Enter Your First Name"))
-        self.lastName = str(input("Enter Your Last Name"))
-        self.mailAddress = str(input("Enter Your Email Address"))
-        self.phoneNo = str(input("Enter Your Phone No"))
+        self.firstName = "firstName"
+        self.lastName = "lastName"
+        self.mailAddress = 'mailAddress'
+        self.phoneNo = 'phone'
+        # self.firstName, self.lastName, self.mailAddress, self.phoneNo = gui.getTopData()
 
     def getDetails(self):
         return (self.firstName + "\n" + self.lastName + "\n" + self.mailAddress + "\n" + self.phoneNo)
@@ -53,10 +54,16 @@ class Userregister:
             print("SomeThing Went Wrong")
 
 
-class UserLogin:
-    def __init__(self):
-        self.userName = input("Enter Email Address")
-        self.Password = input("Enter Password")
-
-    def login(self):
-        pass
+class loginUser:
+    from db import DbConnection
+    dbConn = DbConnection()
+    import hashlib
+    tempEmail = ""
+    tempPassword = ""
+    lists = dbConn.userLogin(email=tempEmail)
+    dictDetails = dict(lists)
+    userEmail = ""
+    userPassword = ""
+    for key in dictDetails:
+        userEmail = key
+        userPassword = dictDetails.get(key)
