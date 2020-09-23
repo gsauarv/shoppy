@@ -36,3 +36,18 @@ class DbConnection:
         dbConn.mycursor.execute(self.sql, self.value)
         self.result = dbConn.mycursor.fetchall()
         return self.result
+
+    def addToCart(self, userEmail, productname, quantity):
+        self.sql = "Insert into cartList values(%s,%s,%s)"
+        self.value = (userEmail, productname, quantity)
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql, self.value)
+        dbConn.db.commit()
+
+    def getProductDetails(self, email):
+        self.sql = "SELECT productName,qty from cartList where userEmail = %s"
+        self.value = (email,)
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql, self.value)
+        self.result = dbConn.mycursor.fetchall()
+        return self.result

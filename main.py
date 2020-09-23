@@ -10,8 +10,5 @@ class registerUser:
     gui.getTopData()
 
 
-
-
-
 obj1 = registerUser()
 obj2 = loginUser()
