@@ -32,10 +32,10 @@ class Gui:
         from db import DbConnection
         dbConn = DbConnection()
         login = loginUser()
-        # tempEmail = self.email.get()
-        # tempPassword = self.password.get()
-        tempEmail = "vitabinary@gmail.com"
-        tempPassword = "ISATPvLA"
+        tempEmail = self.email.get()
+        tempPassword = self.password.get()
+        # tempEmail = "vitabinary@gmail.com"
+        # tempPassword = "ISATPvLA"
         lists = dbConn.userLogin(email=tempEmail)
         dictDetails = dict(lists)
         userEmail = ""
@@ -44,8 +44,11 @@ class Gui:
             userEmail = key
             userPassword = dictDetails.get(key)
 
-        if(userEmail == tempEmail and userPassword == (hashlib.md5(tempPassword.encode()).hexdigest())):
-            self.userDashboard()
+        if(userEmail == 'admin' and userPassword == tempPassword):
+            self.adminPage()
+        elif(userEmail == tempEmail and userPassword == (hashlib.md5(tempPassword.encode()).hexdigest())):
+            # self.userDashboard()
+            self.Groceries()
         else:
             print("SO")
 
@@ -102,33 +105,33 @@ class Gui:
     def quit(self):
         self.top.destroy()
 
-    def userDashboard(self):
-        self.dashboard = Toplevel()
-        self.dashboard.geometry("1920x1080")
-        self.userLogo = Label(
-            self.dashboard, text="Shoppy", font=("Helvetica", 14))
-        self.userLogo.grid(row=0, column=0, padx=20, pady=20, sticky=W)
-        self.userButton = Button(
-            self.dashboard, text="Profile", font=("Helvetica", 12), cursor="hand2")
-        self.userButton.grid(row=0, column=3)
+    # def userDashboard(self):
+    #     self.dashboard = Toplevel()
+    #     self.dashboard.geometry("1920x1080")
+    #     self.userLogo = Label(
+    #         self.dashboard, text="Shoppy", font=("Helvetica", 14))
+    #     self.userLogo.grid(row=0, column=0, padx=20, pady=20, sticky=W)
+    #     self.userButton = Button(
+    #         self.dashboard, text="Profile", font=("Helvetica", 12), cursor="hand2")
+    #     self.userButton.grid(row=0, column=3)
 
-        self.dashGreetings = Label(
-            self.dashboard, text="Welcome To Shoppy,Choose the Categories For Shopping.", font=("Helvetica", 12))
-        self.dashGreetings.grid(row=2, column=0, sticky=W, padx=20, pady=40)
+    #     self.dashGreetings = Label(
+    #         self.dashboard, text="Welcome To Shoppy,Choose the Categories For Shopping.", font=("Helvetica", 12))
+    #     self.dashGreetings.grid(row=2, column=0, sticky=W, padx=20, pady=40)
 
-        self.shopBtn = Button(
-            self.dashboard, text="Groceries", width=20, height=5, font=("Helvetica", 12), bg='#032535', fg='white', cursor="hand2", command=self.Groceries)
-        self.shopBtn1 = Button(
-            self.dashboard, text="Vegetables", width=20, height=5, font=("Helvetica", 12), bg='#004A2F', fg='white', cursor="hand2")
-        self.shopBtn2 = Button(
-            self.dashboard, text="Chocolates", width=20, height=5, font=("Helvetica", 12), bg='#8C5E58', fg='white', cursor="hand2")
-        self.shopBtn3 = Button(
-            self.dashboard, text="Dairy", width=20, height=5, font=("Helvetica", 12), bg='#0E2431', fg='white', cursor="hand2")
+    #     self.shopBtn = Button(
+    #         self.dashboard, text="Groceries", width=20, height=5, font=("Helvetica", 12), bg='#032535', fg='white', cursor="hand2", command=self.Groceries)
+    #     self.shopBtn1 = Button(
+    #         self.dashboard, text="Vegetables", width=20, height=5, font=("Helvetica", 12), bg='#004A2F', fg='white', cursor="hand2")
+    #     self.shopBtn2 = Button(
+    #         self.dashboard, text="Chocolates", width=20, height=5, font=("Helvetica", 12), bg='#8C5E58', fg='white', cursor="hand2")
+    #     self.shopBtn3 = Button(
+    #         self.dashboard, text="Dairy", width=20, height=5, font=("Helvetica", 12), bg='#0E2431', fg='white', cursor="hand2")
 
-        self.shopBtn.grid(row=3, column=0, padx=100, pady=150, sticky=W)
-        self.shopBtn1.grid(row=3, column=1, padx=30)
-        self.shopBtn2.grid(row=3, column=2, padx=50)
-        self.shopBtn3.grid(row=3, column=3, padx=50)
+    #     self.shopBtn.grid(row=3, column=0, padx=100, pady=150, sticky=W)
+    #     self.shopBtn1.grid(row=3, column=1, padx=30)
+    #     self.shopBtn2.grid(row=3, column=2, padx=50)
+    #     self.shopBtn3.grid(row=3, column=3, padx=50)
 
     def Groceries(self):
         from PIL import Image, ImageTk
@@ -286,8 +289,182 @@ class Gui:
         self.label2.grid(row=i+1, column=1, ipady=20)
 
         self.confirmBtn = Button(
-            self.orderPage, text="Confirm Order", cursor='hand2')
+            self.orderPage, text="Confirm Order", cursor='hand2', command=self.orderConfirm)
         self.confirmBtn.grid(row=i+2, column=1, columnspan=2)
+
+    def orderConfirm(self):
+        confirmLabel = Label(
+            self.orderPage, text="Product Ordered  Successfully")
+        confirmLabel.grid(row=6, column=1, sticky=W)
+
+    def adminPage(self):
+        self.adminPage = Toplevel()
+        self.adminPage.geometry("600x500")
+        self.ViewOrder = Button(
+            self.adminPage, text="View Order", cursor="hand2", command=self.getOrderList)
+        self.ViewOrder.grid(row=0, column=0, ipadx=20,
+                            ipady=10, padx=50, pady=50, )
+
+        self.viewCustomers = Button(
+            self.adminPage, text="View Customers", cursor="hand2", command=self.getRecords)
+        self.viewCustomers.grid(row=0, column=1, ipadx=20,
+                                ipady=10, padx=50, pady=50)
+
+        self.viewInventory = Button(
+            self.adminPage, text="Check Inventory", cursor="hand2", command=self.getInventory)
+        self.viewInventory.grid(row=1, column=0, ipadx=20,
+                                ipady=10, padx=50, pady=50)
+
+        # self.changePassword = Button(
+        #     self.adminPage, text="Change Password", cursor="hand2")
+        # self.changePassword.grid(row=1, column=1, ipadx=20,
+        #                          ipady=10, padx=50, pady=50)
+
+    def getRecords(self):
+        self.detailPage = Toplevel()
+        self.detailPage.geometry("600x500")
+        from db import DbConnection
+        dbConn = DbConnection()
+        from addtocart import getDetails
+        productDet = getDetails()
+        self.productDetail = productDet.getDetail()
+        # for key in self.productDetails:
+        a = 0
+        b = 1
+        self.label = Label(self.detailPage, text="Fname")
+        self.label.grid(row=0, column=0, padx=10)
+        self.label1 = Label(self.detailPage, text="Lname")
+        self.label1.grid(row=0, column=1, padx=10)
+        self.label2 = Label(self.detailPage, text="email")
+        self.label2.grid(row=0, column=2, padx=10, sticky=W)
+        for i in self.productDetail:
+            for j in range(0, len(self.productDetail)+1):
+                self.fname = Label(self.detailPage, text=i[j])
+                self.fname.grid(row=b, column=a, sticky=W, padx=10)
+                a += 1
+            b += 1
+            a = 0
+
+    def getOrderList(self):
+        self.OrderListPage = Toplevel()
+        self.OrderListPage.geometry("800x800")
+        from db import DbConnection
+        dbConn = DbConnection()
+        from addtocart import getDetails
+        productDet = getDetails()
+        self.productDetail = productDet.getCartList()
+        # for key in self.productDetails:
+        self.label = Label(self.OrderListPage, text="UserEmail")
+        self.label.grid(row=0, column=0, padx=10, sticky=W)
+        self.label1 = Label(self.OrderListPage, text="ProductName")
+        self.label1.grid(row=0, column=1,)
+        self.label2 = Label(self.OrderListPage, text="ProductQty")
+        self.label2.grid(row=0, column=2, padx=10, sticky=W)
+        a = 0
+        b = 1
+        for i in self.productDetail:
+            for j in i:
+                self.fname = Label(self.OrderListPage, text=j)
+                self.fname.grid(row=b, column=a, sticky=W, padx=10, pady=20)
+            # for j in range(0, len(self.productDetail)):
+            #     self.fname = Label(self.OrderListPage, text=i)
+            #     self.fname.grid(row=b, column=a, sticky=W, padx=10)
+                a += 1
+            a = 0
+            b += 1
+
+    def getInventory(self):
+        self.inventoryPage = Toplevel()
+        self.inventoryPage.geometry("800x800")
+        self.label = Label(self.inventoryPage, text="ProductId")
+        self.label.grid(row=0, column=0, padx=10)
+        self.label1 = Label(self.inventoryPage, text="ProductName")
+        self.label1.grid(row=0, column=1, padx=10)
+        self.label2 = Label(self.inventoryPage, text="ProductQty")
+        self.label2.grid(row=0, column=2, padx=10)
+        self.update = Button(self.inventoryPage,
+                             text="Update Inventory", cursor="hand2", command=self.updateInventory)
+        self.update.grid(row=0, column=3, padx=10, ipadx=20, ipady=5)
+        from db import DbConnection
+        dbConn = DbConnection()
+        from addtocart import getDetails
+        productDet = getDetails()
+        self.productDetail = productDet.getInventory()
+        a = 0
+        b = 1
+        for i in self.productDetail:
+            for j in i:
+                self.fname = Label(self.inventoryPage, text=j)
+                self.fname.grid(row=b, column=a, sticky=W, padx=10, pady=20)
+            # for j in range(0, len(self.productDetail)):
+            #     self.fname = Label(self.OrderListPage, text=i)
+            #     self.fname.grid(row=b, column=a, sticky=W, padx=10)
+                a += 1
+            a = 0
+            b += 1
+
+    def updateInventory(self):
+        self.updatePage = Toplevel()
+        self.updatePage.geometry("500x500")
+        self.label = Label(self.updatePage, text="Rice", pady=20)
+        self.label.grid(row=0, column=0)
+        self.riceEntry = Entry(self.updatePage)
+        self.riceEntry.grid(row=0, column=1, padx=50)
+        self.riceBtn = Button(
+            self.updatePage, text="Update", command=self.updateRice)
+        self.riceBtn.grid(row=0, column=2, padx=50)
+
+        self.label1 = Label(self.updatePage, text="Beans", pady=20)
+        self.label1.grid(row=1, column=0)
+        self.beansEntry = Entry(self.updatePage)
+        self.beansEntry.grid(row=1, column=1)
+        self.beansBtn = Button(
+            self.updatePage, text="Update", command=self.updateBeans)
+        self.beansBtn.grid(row=1, column=2, padx=50)
+
+        self.label2 = Label(self.updatePage, text="Coffee", pady=20)
+        self.label2.grid(row=2, column=0)
+        self.coffeeEntry = Entry(self.updatePage)
+        self.coffeeEntry.grid(row=2, column=1)
+        self.coffeeBtn = Button(
+            self.updatePage, text="Update", command=self.updateCoffee)
+        self.coffeeBtn.grid(row=2, column=2, padx=50)
+
+        self.label2 = Label(self.updatePage, text="Tea", pady=20)
+        self.label2.grid(row=3, column=0)
+        self.teaEntry = Entry(self.updatePage)
+        self.teaEntry.grid(row=3, column=1)
+        self.teaBtn = Button(self.updatePage, text="Update",
+                             command=self.updateTea)
+        self.teaBtn.grid(row=3, column=2, padx=50)
+
+    def updateRice(self):
+        self.riceQty = self.riceEntry.get()
+        self.productId = "1"
+        from db import DbConnection
+        dbConn = DbConnection()
+        dbConn.updateInventory(self.riceQty, self.productId)
+
+    def updateBeans(self):
+        self.riceQty = self.beansEntry.get()
+        self.productId = "2"
+        from db import DbConnection
+        dbConn = DbConnection()
+        dbConn.updateInventory(self.riceQty, self.productId)
+
+    def updateCoffee(self):
+        self.riceQty = self.coffeeEntry.get()
+        self.productId = "3"
+        from db import DbConnection
+        dbConn = DbConnection()
+        dbConn.updateInventory(self.riceQty, self.productId)
+
+    def updateTea(self):
+        self.riceQty = self.teaEntry.get()
+        self.productId = "4"
+        from db import DbConnection
+        dbConn = DbConnection()
+        dbConn.updateInventory(self.riceQty, self.productId)
 
 
 e = Gui(root)

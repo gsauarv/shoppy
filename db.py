@@ -51,3 +51,31 @@ class DbConnection:
         dbConn.mycursor.execute(self.sql, self.value)
         self.result = dbConn.mycursor.fetchall()
         return self.result
+
+    def getCustDetails(self):
+        self.sql = "Select fname,lname,email from requestedUser"
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql)
+        self.results = dbConn.mycursor.fetchall()
+        return self.results
+
+    def getOrderList(self):
+        self.sql = "Select userEmail,productName,qty from cartList"
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql)
+        self.results = dbConn.mycursor.fetchall()
+        return self.results
+
+    def getInventory(self):
+        self.sql = "Select productId,productName,productQty from inventory"
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql)
+        self.results = dbConn.mycursor.fetchall()
+        return self.results
+
+    def updateInventory(self, productQ, productId):
+        self.sql = "update inventory set productQty = %s where productId = %s"
+        self.value = (productQ,productId)
+        dbConn = DbConnection()
+        dbConn.mycursor.execute(self.sql, self.value)
+        dbConn.db.commit()
